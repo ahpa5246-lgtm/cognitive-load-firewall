@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: cognitive-load-firewall
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cognitive-load-firewall-db
+          property: connectionString
+      - key: DEMO_AI_MODE
+        value: "true"
+
+databases:
+  - name: cognitive-load-firewall-db
+    plan: basic-256mb
