@@ -1,3 +1,23 @@
-const criticalTerms=/\b(must|must not|do not|required|emergency|call|deadline)\b/gi;
-export function extractCriticalTokens(input:string){return{numbers:input.match(/\b\d+(?:\.\d+)?\b/g)??[],urls:input.match(/https?:\/\/\S+/g)??[],directives:input.match(criticalTerms)??[]};}
-export function compareCriticalTokens(original:string,adapted:string){const source=extractCriticalTokens(original);const output=extractCriticalTokens(adapted);const missingNumbers=source.numbers.filter(item=>!output.numbers.includes(item));const missingUrls=source.urls.filter(item=>!output.urls.includes(item));return{safe:missingNumbers.length===0&&missingUrls.length===0,missingNumbers,missingUrls};}
+const criticalTerms = /\b(must|must not|do not|required|emergency|call|deadline)\b/gi;
+
+export type CriticalTokens = {
+  numbers: string[];
+  urls: string[];
+  directives: string[];
+};
+
+export function extractCriticalTokens(input: string): CriticalTokens {
+  return {
+    numbers: input.match(/\b\d+(?:\.\d+)?\b/g) ?? [],
+    urls: input.match(/https?:\/\/\S+/g) ?? [],
+    directives: input.match(criticalTerms) ?? []
+  };
+}
+
+export function compareCriticalTokens(original: string, adapted: string) {
+  const source = extractCriticalTokens(original);
+  const output = extractCriticalTokens(adapted);
+  const missingNumbers = source.numbers.filter((item) => !output.numbers.includes(item));
+  const missingUrls = source.urls.filter((item) => !output.urls.includes(item));
+  return { safe: missingNumbers.length === 0 && missingUrls.length === 0, missingNumbers, missingUrls };
+}
