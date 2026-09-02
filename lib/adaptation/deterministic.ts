@@ -1,0 +1,2 @@
+import type { AdaptationPlan } from "@/lib/types";
+export function adaptTextDeterministically(text:string,plan:AdaptationPlan){const sentences=text.split(/(?<=[.!?])\s+/).filter(Boolean);const chunking=plan.strategies.some(s=>s.type==="CHUNK_CONTENT");const chunks=chunking?sentences.reduce<string[]>((acc,sentence,index)=>{const bucket=Math.floor(index/2);acc[bucket]=acc[bucket]?`${acc[bucket]} ${sentence}`:sentence;return acc;},[]):[text];return{chunks,preservedNumbers:text.match(/\b\d+(?:\.\d+)?\b/g)??[],mode:"deterministic-demo"};}
