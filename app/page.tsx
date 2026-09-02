@@ -3,14 +3,14 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="app-shell">
-      <header className="topbar"><Link className="brand" href="/">Cognitive Load <span>Firewall</span></Link><nav aria-label="Main navigation"><Link href="/demo">Demo</Link><Link href="/accessibility">Accessibility</Link><Link href="/responsible-ai">Responsible AI</Link></nav></header>
+      <header className="topbar"><Link className="brand" href="/">Cognitive Load <span>Firewall</span></Link><nav aria-label="Main navigation"><Link href="/demo">Judge demo</Link><Link href="/onboarding">Set preferences</Link><Link href="/dashboard">Workspace</Link><Link href="/responsible-ai">Responsible AI</Link></nav></header>
       <section className="hero">
         <div className="eyebrow">Adaptive cognitive accessibility</div>
         <h1>Your brain shouldn&apos;t have to fight the interface.</h1>
         <p className="hero-copy">Cognitive Load Firewall reshapes digital content around the preferences and limits you provide. It supports accessibility and recovery workflows; it does not diagnose concussion.</p>
         <div className="actions">
           <Link className="primary" href="/demo">Try the adaptive demo</Link>
-          <Link className="secondary" href="/responsible-ai">Responsible AI</Link>
+          <Link className="secondary" href="/onboarding">Personalize the interface</Link>
         </div>
       </section>
       <section className="principles"><div><span className="label">A different adaptation target</span><h2>The user is not the interface problem.</h2></div><p>We analyze the digital task, compare it with preferences you provide, and make the content quieter, clearer, and easier to resume.</p></section>

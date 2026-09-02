@@ -18,5 +18,14 @@ The product changes the **adaptation target** from the recovering person to the 
 ## Responsible AI
 The architecture separates deterministic safety and fidelity checks from optional generative-AI transformations.
 
+## Working demo
+The judge path runs without credentials: onboarding preferences, Maya's content adaptation, Load Estimate, Original/Adapted/Difference views, feedback-driven local personalization, Recovery Session with optional speech, Decision Receipt, and accommodation card.
+
+## Safety and privacy
+Emergency-like input and medical clearance questions stop normal adaptation. Critical numbers, dates, directives, units, percentages, URLs, and email addresses are checked before output. Guest preferences and history stay local; PostgreSQL persistence is enabled only when configured.
+
+## Accessibility and design
+The quiet visual system includes semantic controls, visible focus, reduced-motion support, larger text, high contrast, keyboard navigation, screen-reader labels, and no color-only status.
+
 ## Render
-Production architecture is designed so Render Workflows can orchestrate the multi-stage adaptation pipeline as a significant system component.
+The workflow contract supports a local runner for the credential-free demo and a real Render HTTP runner when `WORKFLOW_PROVIDER=render` and `RENDER_WORKFLOW_URL` are configured. Hosting alone is not presented as workflow integration.

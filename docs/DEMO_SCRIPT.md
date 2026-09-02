@@ -1,19 +1,28 @@
-# 4-Minute Demo Script Skeleton
+# 4-Minute Judge Demo
 
-## 0:00–0:20 — Hook
-Show a dense academic page. “Recovery can make ordinary interfaces feel harder than they used to. Most software asks the user to adapt. We asked: what if the interface adapted instead?”
+## 0:00–0:15 — Hook
+Show the dense biology lesson on `/demo`. “Recovery can make ordinary interfaces feel harder than they used to. What if the interface adapted instead?”
 
-## 0:20–0:45 — Product
-Introduce Cognitive Load Firewall and Maya's fictional demo profile.
+## 0:15–0:35 — Product
+Introduce Cognitive Load Firewall and Maya's fictional profile. Emphasize that preferences are not clinical measurements.
 
-## 0:45–2:20 — Live flow
-Analyze dense content, reveal Interface Load Estimate, show mismatch, adapt, compare Original / Adapted, and show chunked experience.
+## 0:35–1:50 — Live flow
+Adapt the lesson, show the Interface Load Estimate, compare Original / Adapted / Difference, then submit feedback. The profile changes by a small, explainable amount and history records the adaptation.
 
-## 2:20–3:05 — Architecture
-Show deterministic safety, load model, adaptation pipeline, database, and Render workflow plan.
+## 1:50–2:20 — Recovery Session
+Open the session, advance one idea at a time, use Read aloud, and open “What matters so far.” Mention that the user controls pace and can pause.
 
-## 3:05–3:35 — Responsible AI
-Explain non-diagnostic boundary, original-content access, fidelity validation, and decision receipts.
+## 2:20–2:40 — Receipt and safety
+Open the decision receipt. Show provider, rules, stages, fidelity, and the non-diagnostic boundary. Demonstrate that a return-to-play question is blocked.
 
-## 3:35–3:55 — Closing
+## 2:40–3:00 — Accommodation
+Open `/accommodations`, select functional needs, and copy or print the diagnosis-free card.
+
+## 3:00–3:25 — Architecture
+Show deterministic safety, the typed AI provider, PostgreSQL transaction, and local/Render workflow contract.
+
+## 3:25–3:45 — Responsible AI
+Explain original-content access, critical-token fidelity, privacy minimization, and the local fallback.
+
+## 3:45–3:55 — Closing
 “The user isn't the interface problem. The interface is the adaptation target.”

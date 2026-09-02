@@ -14,7 +14,7 @@ export const adaptationInputSchema = z.object({
     attention: z.number().min(0).max(100), visual: z.number().min(0).max(100),
     motion: z.number().min(0).max(100), density: z.number().min(0).max(100)
   }),
-  mode: z.enum(["chunk", "plain", "guided"]).default("chunk")
+  mode: z.enum(["chunk", "plain", "guided", "essential"]).default("chunk")
 });
 
 export type AdaptationInput = z.infer<typeof adaptationInputSchema>;
@@ -33,17 +33,19 @@ export function runAdaptation(input: AdaptationInput) {
   const load = analyzeContentLoad(parsed.content);
   const mismatch = calculateMismatch(load, parsed.tolerance);
   const plan = buildAdaptationPlan(mismatch);
-  const transformed = adaptTextDeterministically(parsed.mode === "plain" ? plainLanguage(parsed.content) : parsed.content, plan);
+  const source = parsed.mode === "plain" ? plainLanguage(parsed.content) : parsed.content;
+  const transformed = adaptTextDeterministically(source, plan);
+  const essential = parsed.mode === "essential" ? transformed.chunks.filter((chunk) => /\b(must|required|warning|deadline|do not|first|key|important)\b/i.test(chunk)) : transformed.chunks;
   const chunks = parsed.mode === "guided"
     ? transformed.chunks.map((chunk, index) => `Step ${index + 1}: ${chunk}`)
-    : transformed.chunks;
+    : essential.length ? essential : transformed.chunks;
   const adaptedContent = chunks.join("\n\n");
   const fidelity = compareCriticalTokens(parsed.content, adaptedContent);
   const overallMismatch = Math.round(Object.values(mismatch).reduce((sum, value) => sum + value, 0) / 6);
 
   return {
     blocked: false as const, safety, load, mismatch, overallMismatch, plan,
-    adaptedContent, chunks, fidelity,
+    adaptedContent, chunks, fidelity, operations: transformed.operations,
     receipt: {
       inputType: "pasted_text", provider: "deterministic-demo", stages: [
         "normalizeInput", "safetyScan", "extractFeatures", "analyzeLoad",

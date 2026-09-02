@@ -17,7 +17,7 @@ export function extractCriticalTokens(input: string): CriticalTokens {
     directives: input.match(criticalTerms) ?? [],
     dates: input.match(/\b(?:20\d{2}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[/-]\d{1,2}[/-]20\d{2})\b/g) ?? [],
     units: input.match(/\b\d+(?:\.\d+)?\s?(?:mg|g|kg|ml|cm|mm|hours?|minutes?|USD|dollars?)\b/gi) ?? [],
-    percentages: input.match(/\b\d+(?:\.\d+)?%\b/g) ?? [],
+    percentages: input.match(/\b\d+(?:\.\d+)?%(?=\s|$|[^\d])/g) ?? [],
     emails: input.match(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/g) ?? []
   };
 }

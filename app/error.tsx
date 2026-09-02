@@ -1,0 +1,3 @@
+"use client";
+import Link from "next/link";
+export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) { return <main className="app-shell"><section className="narrow"><div className="eyebrow">A quiet interruption</div><h1>That task could not finish.</h1><p className="lede">Nothing was lost from your saved preferences. You can retry this view or return to the workspace.</p><div className="actions"><button className="primary" onClick={reset}>Try again</button><Link className="secondary" href="/dashboard">Back to workspace</Link></div></section></main>; }
