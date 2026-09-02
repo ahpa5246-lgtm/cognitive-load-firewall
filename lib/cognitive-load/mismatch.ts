@@ -1,0 +1,2 @@
+import type { LoadVector } from "@/lib/types";
+export function calculateMismatch(content:LoadVector,tolerance:LoadVector):LoadVector{return{reading:Math.max(0,content.reading-tolerance.reading),memory:Math.max(0,content.memory-tolerance.memory),attention:Math.max(0,content.attention-tolerance.attention),visual:Math.max(0,content.visual-tolerance.visual),motion:Math.max(0,content.motion-tolerance.motion),density:Math.max(0,content.density-tolerance.density)}}
