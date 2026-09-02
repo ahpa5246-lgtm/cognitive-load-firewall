@@ -23,23 +23,14 @@ flowchart TD
   K --> D
 ```
 
-## Foundation included
+## What works today
 
-- Next.js + TypeScript application shell
-- Working `/demo` experience
-- Deterministic Interface Load Estimate
-- Load mismatch engine
-- Adaptation planner
-- Deterministic content-chunking fallback
-- Emergency-like symptom safety rules
-- Critical-token fidelity utilities
-- PostgreSQL/Prisma schema
-- Synthetic demo profiles
-- Responsible AI page
-- `/api/health` endpoint
-- Render Blueprint starter config
-- Unit tests
-- Hackathon documentation
+- `/demo` with original, adapted, and difference views
+- Deterministic Interface Load Estimate, mismatch, planning, safety, and fidelity
+- Guest onboarding, local history, settings, and privacy-preserving accommodation card
+- Recovery Session with optional browser read-aloud
+- Responsible AI and interactive accessibility lab
+- PostgreSQL/Prisma foundation and CI verification
 
 ## Quick start
 
@@ -71,7 +62,7 @@ The system must never diagnose concussion, calculate a recovery percentage, clea
 
 ## Render strategy
 
-The current `render.yaml` provides the deployment foundation for the web app and PostgreSQL. The next build phase should add genuine **Render Workflows** orchestration for the multi-stage adaptation pipeline rather than using Render only as hosting.
+The `render.yaml` provides the web app and PostgreSQL foundation. `lib/workflow/local.ts` implements the workflow contract used by the demo, returning workflow, request, and adaptation IDs with stage metadata. See [docs/RENDER_WORKFLOWS.md](docs/RENDER_WORKFLOWS.md).
 
 ```mermaid
 flowchart LR
@@ -86,16 +77,19 @@ flowchart LR
   I --> J[buildReceipt]
 ```
 
-## Next build priorities
+## Honest limitations
 
-1. persistence-backed end-to-end demo
-2. real Render Workflows orchestration
-3. AI provider abstraction + structured outputs
-4. feedback-driven personalization
-5. accessibility polish
-6. accommodation card
-7. end-to-end tests
-8. production deployment
+The default provider is deterministic and runs without an API key. Prisma models and a reusable client are included for PostgreSQL deployment, while guest flows remain usable without a database. Render Workflows require deployment-specific binding; local workflow metadata is explicit and is not presented as a remote run. This product supports interface adaptation only and makes no clinical or recovery prediction.
+
+## Verification
+
+```bash
+npm test
+npm run typecheck
+npm run build
+```
+
+The CI workflow runs those checks on pushes and pull requests.
 
 ## License
 

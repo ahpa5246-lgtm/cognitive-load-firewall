@@ -1,3 +1,5 @@
-export type LoadVector = { reading:number; memory:number; attention:number; visual:number; motion:number; density:number };
-export type AdaptationStrategy = "CHUNK_CONTENT" | "REDUCE_INFORMATION_DENSITY" | "ADD_MEMORY_SUPPORT" | "REDUCE_MOTION" | "GUIDED_STEPS";
+export type LoadDimension = "reading" | "memory" | "attention" | "visual" | "motion" | "density" | "audio" | "taskSwitching" | "duration" | "fatigue";
+export type LoadVector = { reading:number; memory:number; attention:number; visual:number; motion:number; density:number; audio?:number; taskSwitching?:number; duration?:number; fatigue?:number };
+export type CognitiveProfile = { id?:string; source:"self_reported"|"interaction_derived"|"demo"|"clinician_constraint"; confidence?:number; dimensions: { readingTolerance:number; attentionTolerance:number; memoryLoadTolerance:number; visualLoadTolerance:number; motionTolerance:number; informationDensityTolerance:number; audioTolerance:number; taskSwitchingTolerance:number; sessionDurationTolerance:number; fatigueLevel:number } };
+export type AdaptationStrategy = "CHUNK_CONTENT" | "REDUCE_INFORMATION_DENSITY" | "ADD_MEMORY_SUPPORT" | "REDUCE_MOTION" | "GUIDED_STEPS" | "SIMPLIFY_LANGUAGE" | "FOCUS_CONTENT" | "ESSENTIAL_CONTENT";
 export type AdaptationPlan = { strategies: { type: AdaptationStrategy; reason:string; priority:number }[] };

@@ -1,0 +1,4 @@
+import { randomUUID } from "node:crypto";
+import { runAdaptation, type AdaptationInput } from "@/lib/adaptation/pipeline";
+export type WorkflowStatus = { workflowId: string; requestId: string; adaptationId: string; currentStage: string; status: "completed" | "blocked"; startedAt: string; finishedAt: string; durationMs: number };
+export async function adaptContentWorkflow(input: AdaptationInput) { const started = Date.now(); const startedAt = new Date(started).toISOString(); const result = runAdaptation(input); const finished = new Date().toISOString(); return { result, workflow: { workflowId: `local-${randomUUID()}`, requestId: randomUUID(), adaptationId: randomUUID(), currentStage: result.blocked ? "safetyScan" : "buildDecisionReceipt", status: result.blocked ? "blocked" : "completed", startedAt, finishedAt: finished, durationMs: Date.now() - started } satisfies WorkflowStatus }; }

@@ -1,2 +1,2 @@
 import { NextResponse } from "next/server";
-export async function GET(){return NextResponse.json({status:"ok",app:"cognitive-load-firewall",demoAiMode:process.env.DEMO_AI_MODE!=="false",databaseConfigured:Boolean(process.env.DATABASE_URL),timestamp:new Date().toISOString()});}
+export async function GET(){return NextResponse.json({status:"ok",app:"cognitive-load-firewall",databaseConfigured:Boolean(process.env.DATABASE_URL),databaseReachable:null,aiProvider:process.env.AI_PROVIDER??"deterministic",demoAiMode:process.env.DEMO_AI_MODE!=="false",workflowProvider:process.env.WORKFLOW_PROVIDER??"local",workflowConfigured:Boolean(process.env.RENDER_WORKFLOW_URL),timestamp:new Date().toISOString()});}

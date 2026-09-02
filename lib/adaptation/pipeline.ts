@@ -28,7 +28,7 @@ const plainLanguage = (text: string) => text
 export function runAdaptation(input: AdaptationInput) {
   const parsed = adaptationInputSchema.parse(input);
   const safety = safetyScan(parsed.content);
-  if (safety.blocked) return { blocked: true as const, safety };
+  if (safety.blocked || safety.requiresCare) return { blocked: true as const, safety };
 
   const load = analyzeContentLoad(parsed.content);
   const mismatch = calculateMismatch(load, parsed.tolerance);
