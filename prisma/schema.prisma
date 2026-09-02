@@ -1,0 +1,31 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+
+model User {
+ id String @id @default(uuid())
+ email String? @unique
+ displayName String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ profiles CognitiveProfile[]
+ artifacts ContentArtifact[]
+ adaptations Adaptation[]
+ feedback AdaptationFeedback[]
+ safetyEvents SafetyEvent[]
+ constraints ClinicianConstraint[]
+ receipts AIReceipt[]
+ accommodations AccommodationCard[]
+ consents UserConsent[]
+}
+model CognitiveProfile { id String @id @default(uuid()); userId String?; source String; confidence Float?; reading Int; memory Int; attention Int; visual Int; motion Int; density Int; notes String?; createdAt DateTime @default(now()); user User? @relation(fields:[userId],references:[id],onDelete:Cascade); @@index([userId,createdAt]) }
+model ContentArtifact { id String @id @default(uuid()); userId String?; title String?; inputType String; content String; createdAt DateTime @default(now()); user User? @relation(fields:[userId],references:[id],onDelete:SetNull); analysis ContentAnalysis?; adaptations Adaptation[]; @@index([userId,createdAt]) }
+model ContentAnalysis { id String @id @default(uuid()); artifactId String @unique; reading Int; memory Int; attention Int; visual Int; motion Int; density Int; explanation Json?; createdAt DateTime @default(now()); artifact ContentArtifact @relation(fields:[artifactId],references:[id],onDelete:Cascade) }
+model Adaptation { id String @id @default(uuid()); userId String?; artifactId String; mode String; adaptedContent String; plan Json; status String @default("completed"); createdAt DateTime @default(now()); user User? @relation(fields:[userId],references:[id],onDelete:SetNull); artifact ContentArtifact @relation(fields:[artifactId],references:[id],onDelete:Cascade); stages AdaptationStage[]; feedback AdaptationFeedback[]; receipt AIReceipt?; @@index([userId,createdAt]); @@index([artifactId]) }
+model AdaptationStage { id String @id @default(uuid()); adaptationId String; stage String; status String; durationMs Int?; metadata Json?; createdAt DateTime @default(now()); adaptation Adaptation @relation(fields:[adaptationId],references:[id],onDelete:Cascade); @@index([adaptationId,createdAt]) }
+model AdaptationFeedback { id String @id @default(uuid()); userId String?; adaptationId String; ease String; difficulty String?; note String?; createdAt DateTime @default(now()); user User? @relation(fields:[userId],references:[id],onDelete:SetNull); adaptation Adaptation @relation(fields:[adaptationId],references:[id],onDelete:Cascade); @@index([adaptationId,createdAt]) }
+model SafetyEvent { id String @id @default(uuid()); userId String?; category String; blockedFlow Boolean @default(true); metadata Json?; createdAt DateTime @default(now()); user User? @relation(fields:[userId],references:[id],onDelete:SetNull); @@index([userId,createdAt]) }
+model ClinicianConstraint { id String @id @default(uuid()); userId String; type String; value String; source String @default("user_entered"); expiresAt DateTime?; createdAt DateTime @default(now()); user User @relation(fields:[userId],references:[id],onDelete:Cascade); @@index([userId,createdAt]) }
+model AIExecution { id String @id @default(uuid()); provider String; task String; status String; durationMs Int?; requestHash String?; createdAt DateTime @default(now()); @@index([createdAt]) }
+model AIReceipt { id String @id @default(uuid()); userId String?; adaptationId String @unique; rulesTriggered Json; aiStagesUsed Json; preservedCritical Json; safetyChecksPassed Boolean; createdAt DateTime @default(now()); user User? @relation(fields:[userId],references:[id],onDelete:SetNull); adaptation Adaptation @relation(fields:[adaptationId],references:[id],onDelete:Cascade) }
+model AccommodationCard { id String @id @default(uuid()); userId String; token String @unique @default(uuid()); needs Json; expiresAt DateTime; createdAt DateTime @default(now()); user User @relation(fields:[userId],references:[id],onDelete:Cascade); @@index([userId,expiresAt]) }
+model UserConsent { id String @id @default(uuid()); userId String; type String; granted Boolean; createdAt DateTime @default(now()); user User @relation(fields:[userId],references:[id],onDelete:Cascade); @@index([userId,createdAt]) }
