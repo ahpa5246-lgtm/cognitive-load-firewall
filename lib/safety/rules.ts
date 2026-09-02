@@ -1,0 +1,2 @@
+const emergencyPatterns=[/worsening severe headache/i,/repeated vomiting/i,/seizure/i,/loss of consciousness/i,/increasing confusion/i,/unable to wake/i,/weakness/i,/numbness/i,/slurred speech/i];
+export function safetyScan(input:string){const matches=emergencyPatterns.filter(pattern=>pattern.test(input));return{blocked:matches.length>0,matchCount:matches.length,message:matches.length?"This tool cannot determine severity. Seek urgent medical evaluation or local emergency services.":null};}
