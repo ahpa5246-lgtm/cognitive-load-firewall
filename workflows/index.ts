@@ -1,11 +1,26 @@
 import { task } from "@renderinc/sdk/workflows";
-import { adaptationInputSchema, type AdaptationInput } from "@/lib/adaptation/pipeline";
+import { z } from "zod";
 import { safetyScan } from "@/lib/safety/rules";
 import { analyzeContentLoad } from "@/lib/cognitive-load/analyzer";
 import { calculateMismatch } from "@/lib/cognitive-load/mismatch";
 import { buildAdaptationPlan } from "@/lib/adaptation/planner";
 import { adaptTextDeterministically } from "@/lib/adaptation/deterministic";
 import { compareCriticalTokens } from "@/lib/fidelity/critical-tokens";
+
+const adaptationInputSchema = z.object({
+  content: z.string().trim().min(20).max(30000),
+  tolerance: z.object({
+    reading: z.number().min(0).max(100),
+    memory: z.number().min(0).max(100),
+    attention: z.number().min(0).max(100),
+    visual: z.number().min(0).max(100),
+    motion: z.number().min(0).max(100),
+    density: z.number().min(0).max(100),
+  }),
+  mode: z.enum(["chunk", "plain", "guided", "essential"]).default("chunk"),
+});
+
+type AdaptationInput = z.infer<typeof adaptationInputSchema>;
 
 const retry = { maxRetries: 2, waitDurationMs: 500, backoffScaling: 2 };
 
