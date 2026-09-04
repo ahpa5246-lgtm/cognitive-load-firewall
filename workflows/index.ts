@@ -9,6 +9,13 @@ import { compareCriticalTokens } from "@/lib/fidelity/critical-tokens";
 
 const retry = { maxRetries: 2, waitDurationMs: 500, backoffScaling: 2 };
 
+type LoadAnalysis = {
+  load: ReturnType<typeof analyzeContentLoad>;
+  mismatch: ReturnType<typeof calculateMismatch>;
+  plan: ReturnType<typeof buildAdaptationPlan>;
+  overallMismatch: number;
+};
+
 const plainLanguage = (text: string) => text
   .replace(/comprises/gi, "includes")
   .replace(/utilize/gi, "use")
@@ -26,7 +33,7 @@ const validateAndSafety = task(
 
 const analyzeCognitiveLoad = task(
   { name: "analyzeCognitiveLoad", retry, timeoutSeconds: 60 },
-  function analyzeCognitiveLoad(input: AdaptationInput) {
+  function analyzeCognitiveLoad(input: AdaptationInput): LoadAnalysis {
     const load = analyzeContentLoad(input.content);
     const mismatch = calculateMismatch(load, input.tolerance);
     const plan = buildAdaptationPlan(mismatch);
@@ -39,10 +46,7 @@ const analyzeCognitiveLoad = task(
 
 const transformAndVerify = task(
   { name: "transformAndVerify", retry, timeoutSeconds: 90 },
-  function transformAndVerify(
-    input: AdaptationInput,
-    analysis: Awaited<ReturnType<typeof analyzeCognitiveLoad>>,
-  ) {
+  function transformAndVerify(input: AdaptationInput, analysis: LoadAnalysis) {
     const source = input.mode === "plain" ? plainLanguage(input.content) : input.content;
     const transformed = adaptTextDeterministically(source, analysis.plan);
     const essential = input.mode === "essential"
