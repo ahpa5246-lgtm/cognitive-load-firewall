@@ -1,4 +1,5 @@
 import type { LoadVector } from "@/lib/types";
+import styles from "./LoadSpectrum.module.css";
 
 type PreferenceVector = {
   reading: number;
@@ -47,26 +48,26 @@ export function LoadSpectrum({ load, preference }: { load: LoadVector; preferenc
   const largestValue = mismatchValues[largest.key];
 
   return (
-    <section className="load-spectrum-card panel" aria-labelledby="load-spectrum-title">
-      <div className="load-spectrum-copy">
+    <section className={`${styles.card} panel`} aria-labelledby="load-spectrum-title">
+      <div className={styles.copy}>
         <span className="label">Load Spectrum</span>
         <h2 id="load-spectrum-title">Where the interface asks for more than you prefer.</h2>
         <p>
           This compares an experimental interface-load estimate with the preferences you selected. It is not a medical or neurological measurement.
         </p>
-        <div className="spectrum-legend" aria-label="Chart legend">
-          <span><i className="legend-content" />Content load</span>
-          <span><i className="legend-preference" />My preference</span>
-          <span><i className="legend-mismatch" />Mismatch</span>
+        <div className={styles.legend} aria-label="Chart legend">
+          <span><i className={styles.contentDot} />Content load</span>
+          <span><i className={styles.preferenceDot} />My preference</span>
+          <span><i className={styles.mismatchDot} />Mismatch</span>
         </div>
-        <div className="spectrum-insight" role="status">
+        <div className={styles.insight} role="status">
           <span>Largest mismatch</span>
           <strong>{largest.label}</strong>
           <small>{largestValue > 0 ? `${largestValue} points above current preference` : "No positive mismatch detected"}</small>
         </div>
       </div>
 
-      <div className="load-spectrum-visual">
+      <div className={styles.visual}>
         <svg viewBox="0 0 300 300" role="img" aria-labelledby="spectrum-title spectrum-desc">
           <title id="spectrum-title">Interface Load Spectrum</title>
           <desc id="spectrum-desc">
@@ -75,7 +76,7 @@ export function LoadSpectrum({ load, preference }: { load: LoadVector; preferenc
           {[25, 50, 75, 100].map((level) => (
             <polygon
               key={level}
-              className="spectrum-grid"
+              className={styles.grid}
               points={dimensions.map((_, index) => {
                 const p = point(index, level);
                 return `${p.x},${p.y}`;
@@ -87,18 +88,18 @@ export function LoadSpectrum({ load, preference }: { load: LoadVector; preferenc
             const label = point(index, 121);
             return (
               <g key={dimension.key}>
-                <line className="spectrum-axis" x1={center} y1={center} x2={outer.x} y2={outer.y} />
-                <text className="spectrum-label" x={label.x} y={label.y} textAnchor="middle" dominantBaseline="middle">{dimension.label}</text>
+                <line className={styles.axis} x1={center} y1={center} x2={outer.x} y2={outer.y} />
+                <text className={styles.label} x={label.x} y={label.y} textAnchor="middle" dominantBaseline="middle">{dimension.label}</text>
               </g>
             );
           })}
-          <polygon className="spectrum-shape spectrum-content" points={polygon(contentValues)} />
-          <polygon className="spectrum-shape spectrum-preference" points={polygon(preferenceValues)} />
-          <polygon className="spectrum-shape spectrum-mismatch" points={polygon(mismatchValues)} />
+          <polygon className={`${styles.shape} ${styles.content}`} points={polygon(contentValues)} />
+          <polygon className={`${styles.shape} ${styles.preference}`} points={polygon(preferenceValues)} />
+          <polygon className={`${styles.shape} ${styles.mismatch}`} points={polygon(mismatchValues)} />
         </svg>
       </div>
 
-      <dl className="spectrum-table" aria-label="Load Spectrum values">
+      <dl className={styles.table} aria-label="Load Spectrum values">
         {dimensions.map(({ key, label }) => (
           <div key={key}>
             <dt>{label}</dt>
