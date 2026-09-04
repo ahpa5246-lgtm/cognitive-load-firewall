@@ -9,6 +9,8 @@ import { adjustProfile, type FeedbackDifficulty } from "@/lib/profile/feedback";
 import { addHistory } from "@/lib/storage/history-store";
 
 type Result = ReturnType<typeof runAdaptation>;
+type WorkflowMeta = { workflowId: string; requestId: string; currentStage: string; status: "completed" | "blocked"; durationMs: number };
+type ApiResponse = { result?: Result; workflow?: WorkflowMeta; error?: string; message?: string };
 const toTolerance = (profile: ProfilePreferences) => ({ reading: profile.readingTolerance, memory: profile.memoryLoadTolerance, attention: profile.attentionTolerance, visual: profile.visualLoadTolerance, motion: profile.motionTolerance, density: profile.informationDensityTolerance });
 const toSpectrumPreference = (profile: ProfilePreferences) => ({ reading: profile.readingTolerance, memory: profile.memoryLoadTolerance, attention: profile.attentionTolerance, visual: profile.visualLoadTolerance, motion: profile.motionTolerance, density: profile.informationDensityTolerance });
 
@@ -20,12 +22,32 @@ export default function DemoPage() {
   const [feedback, setFeedback] = useState<string | null>(null);
   const [profile, setProfile] = useState<ProfilePreferences>(() => readProfile());
   const [adjustment, setAdjustment] = useState<string | null>(null);
+  const [workflow, setWorkflow] = useState<WorkflowMeta | null>(null);
+  const [running, setRunning] = useState(false);
+  const [runError, setRunError] = useState<string | null>(null);
 
-  function adapt() {
+  async function adapt() {
     setFeedback(null);
     setAdjustment(null);
-    setResult(runAdaptation({ content, tolerance: toTolerance(profile), mode }));
+    setRunError(null);
+    setWorkflow(null);
+    setRunning(true);
     setView("adapted");
+    try {
+      const response = await fetch("/api/adapt", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ content, tolerance: toTolerance(profile), mode }),
+      });
+      const payload = await response.json() as ApiResponse;
+      if (!payload.result) throw new Error(payload.message || payload.error || "Adaptation did not return a result.");
+      setResult(payload.result);
+      setWorkflow(payload.workflow ?? null);
+    } catch (error) {
+      setRunError(error instanceof Error ? error.message : "The adaptation could not be completed.");
+    } finally {
+      setRunning(false);
+    }
   }
 
   function recordFeedback(label: string) {
@@ -43,7 +65,7 @@ export default function DemoPage() {
   return <Shell>
     <section className="demo-header"><div><div className="eyebrow">90-second demo / Maya</div><h1>Make one thing easier to process.</h1><p className="lede">A fictional study profile helps the interface choose a calmer starting point. These are personalization preferences, not clinical measurements.</p></div><div className="profile-chip"><strong>Maya</strong><span>Reading stamina {profile.readingTolerance} · Visual {profile.visualLoadTolerance} · Motion {profile.motionTolerance}</span></div></section>
     <section className="workspace" aria-label="Adapt content workspace">
-      <div className="input-panel panel"><label htmlFor="content"><span className="label">01 / Content to adapt</span><textarea id="content" value={content} onChange={(event) => setContent(event.target.value)} /><span className="field-note">Pasted content stays in this demo session. Treat external content as untrusted data.</span></label><div className="mode-row"><span className="label">Adaptation mode</span><div className="segmented" role="group" aria-label="Adaptation mode">{([["chunk", "Chunk"], ["plain", "Plain language"], ["guided", "Guided steps"]] as const).map(([value, label]) => <button key={value} className={mode === value ? "selected" : ""} onClick={() => setMode(value)} aria-pressed={mode === value}>{label}</button>)}</div></div><button className="primary full" onClick={adapt}>Adapt this content <span aria-hidden="true">→</span></button></div>
+      <div className="input-panel panel"><label htmlFor="content"><span className="label">01 / Content to adapt</span><textarea id="content" value={content} onChange={(event) => setContent(event.target.value)} /><span className="field-note">Pasted content stays in this demo session. Treat external content as untrusted data.</span></label><div className="mode-row"><span className="label">Adaptation mode</span><div className="segmented" role="group" aria-label="Adaptation mode">{([["chunk", "Chunk"], ["plain", "Plain language"], ["guided", "Guided steps"]] as const).map(([value, label]) => <button key={value} className={mode === value ? "selected" : ""} onClick={() => setMode(value)} aria-pressed={mode === value}>{label}</button>)}</div></div><button className="primary full" onClick={adapt} disabled={running}>{running ? "Running adaptation pipeline…" : <>Adapt this content <span aria-hidden="true">→</span></>}</button>{runError && <p className="confirmation" role="alert">{runError}</p>}{workflow && <p className="confirmation" role="status">Render Workflow completed · {workflow.currentStage} · {workflow.durationMs} ms</p>}</div>
       <div className="results-panel">{result.blocked ? <div className="safety-notice" role="alert"><span className="label">Safety pause</span><h2>Pause and seek urgent help.</h2><p>{result.safety.message} This tool cannot determine severity and will not provide productivity advice for this message.</p></div> : <>
         <div className="load-summary panel"><div><span className="label">02 / Interface Load Estimate</span><h2>{result.overallMismatch > 35 ? "A high mismatch is showing" : "A manageable mismatch is showing"}</h2><p>Experimental interface estimate. It helps choose presentation changes; it does not measure recovery.</p></div><div className="spectrum" aria-label={`Overall mismatch ${result.overallMismatch} out of 100`}><strong>{result.overallMismatch}</strong><span>mismatch</span></div></div>
         <LoadSpectrum load={result.load} preference={toSpectrumPreference(profile)} />
@@ -51,7 +73,7 @@ export default function DemoPage() {
         <div className="view-tabs" role="tablist" aria-label="Content comparison">{(["original", "adapted", "difference"] as const).map((value) => <button key={value} onClick={() => setView(value)} className={view === value ? "active" : ""} role="tab" aria-selected={view === value}>{value}</button>)}</div>
         <article className={`content-view panel ${view === "adapted" ? "adapted" : ""}`}><span className="label">03 / {view === "original" ? "Original content" : view === "difference" ? "What changed" : "Adapted content"}</span>{view === "original" && <p>{content}</p>}{view === "adapted" && result.chunks.map((chunk, index) => <section className="chunk" key={`${chunk}-${index}`}><span className="chunk-number">{String(index + 1).padStart(2, "0")}</span><p>{chunk}</p>{index === 0 && <button className="text-button" onClick={() => setFeedback("simpler")}>Make this simpler</button>}</section>)}{view === "difference" && <><p><strong>Kept in view:</strong> the original meaning, numbers, dates, URLs, and safety directives remain available.</p><ul>{result.plan.strategies.map((item) => <li key={item.type}><strong>{item.type.replaceAll("_", " ")}</strong> because of {item.reason.replace("Mismatch", " preference mismatch").toLowerCase()}.</li>)}</ul></>}</article>
         <div className="aftercare panel"><div><span className="label">04 / Quick check-in</span><h2>Was this easier to process?</h2></div><div className="feedback-buttons">{["Much easier", "A little easier", "No difference", "Harder"].map((label) => <button key={label} onClick={() => recordFeedback(label)} className={feedback === label ? "selected" : ""}>{label}</button>)}</div>{feedback && <p className="confirmation" role="status">Thanks. Your preference was noted for this demo session.</p>}{adjustment && <p className="confirmation" role="status">{adjustment}</p>}<ActionLink href="/session" secondary>Start a recovery session</ActionLink></div>
-        <details className="receipt panel"><summary>Why was this changed? <span>Decision receipt</span></summary><div className="receipt-grid"><p><strong>Provider</strong> {result.receipt.provider}</p><p><strong>Rules</strong> {result.receipt.rulesTriggered.length || "None"}</p><p><strong>Fidelity</strong> {result.fidelity.safe ? "Critical tokens preserved" : "Review original"}</p><p><strong>Safety</strong> Passed before adaptation</p><p><strong>Profile source</strong> {profile.source.replaceAll("_", " ")}</p><p><strong>Interface mismatch</strong> {result.overallMismatch}/100</p></div><p>{result.receipt.explanation}</p><p className="receipt-boundary"><strong>AI boundary:</strong> This system may change presentation, but it is not allowed to diagnose concussion, estimate recovery, or provide medical clearance.</p></details>
+        <details className="receipt panel"><summary>Why was this changed? <span>Decision receipt</span></summary><div className="receipt-grid"><p><strong>Provider</strong> {result.receipt.provider}</p><p><strong>Rules</strong> {result.receipt.rulesTriggered.length || "None"}</p><p><strong>Fidelity</strong> {result.fidelity.safe ? "Critical tokens preserved" : "Review original"}</p><p><strong>Safety</strong> Passed before adaptation</p><p><strong>Profile source</strong> {profile.source.replaceAll("_", " ")}</p><p><strong>Interface mismatch</strong> {result.overallMismatch}/100</p>{workflow && <p><strong>Workflow</strong> {workflow.workflowId}</p>}</div><p>{result.receipt.explanation}</p><p className="receipt-boundary"><strong>AI boundary:</strong> This system may change presentation, but it is not allowed to diagnose concussion, estimate recovery, or provide medical clearance.</p></details>
       </>}</div>
     </section>
   </Shell>;
