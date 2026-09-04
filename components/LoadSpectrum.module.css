@@ -5,13 +5,15 @@
   gap: 24px;
   align-items: center;
   overflow: hidden;
+  background: linear-gradient(145deg, rgba(201,255,88,.035), transparent 42%), #111512;
+  border: 1px solid var(--line);
 }
 
 .copy h2 {
   margin: 8px 0 10px;
   font-size: clamp(1.55rem, 3vw, 2.35rem);
   line-height: 1.08;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.045em;
 }
 
 .copy p {
@@ -25,7 +27,7 @@
   flex-wrap: wrap;
   gap: 10px 16px;
   margin-top: 20px;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--muted);
 }
 
@@ -36,21 +38,22 @@
 }
 
 .legend i {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   display: inline-block;
   border-radius: 50%;
+  box-shadow: 0 0 12px currentColor;
 }
 
-.contentDot { background: #246047; }
-.preferenceDot { background: #d4a53d; }
-.mismatchDot { background: #7f6b9f; }
+.contentDot { background: #c9ff58; color:#c9ff58; }
+.preferenceDot { background: #73f5d3; color:#73f5d3; }
+.mismatchDot { background: #ffbb6e; color:#ffbb6e; }
 
 .insight {
   margin-top: 22px;
   padding: 15px 16px;
-  border-left: 3px solid var(--yellow);
-  background: #f2f0e7;
+  border-left: 2px solid var(--acid);
+  background: rgba(201,255,88,.045);
   display: grid;
   gap: 2px;
 }
@@ -58,11 +61,12 @@
 .insight span,
 .insight small {
   color: var(--muted);
-  font-size: 0.76rem;
+  font-size: 0.74rem;
 }
 
 .insight strong {
   font-size: 1.15rem;
+  color: var(--acid-soft);
 }
 
 .visual {
@@ -70,9 +74,12 @@
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at center, rgba(36, 96, 71, 0.07), transparent 58%),
-    linear-gradient(180deg, rgba(255,255,255,.72), rgba(242,245,239,.72));
-  border-radius: 10px;
+    radial-gradient(circle at center, rgba(201,255,88,.08), transparent 54%),
+    linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px),
+    #0e120f;
+  background-size:auto,28px 28px,28px 28px,auto;
+  border: 1px solid #242d27;
 }
 
 .visual svg {
@@ -82,19 +89,20 @@
 
 .grid {
   fill: none;
-  stroke: #d7ddd5;
+  stroke: #27302b;
   stroke-width: 1;
 }
 
 .axis {
-  stroke: #e0e4df;
+  stroke: #222a26;
   stroke-width: 1;
 }
 
 .label {
   font-size: 10px;
-  fill: #5e6c64;
+  fill: #8c9890;
   font-weight: 650;
+  letter-spacing:.04em;
 }
 
 .shape {
@@ -103,19 +111,19 @@
 }
 
 .content {
-  fill: rgba(36, 96, 71, 0.18);
-  stroke: #246047;
+  fill: rgba(201, 255, 88, 0.11);
+  stroke: #c9ff58;
 }
 
 .preference {
-  fill: rgba(212, 165, 61, 0.12);
-  stroke: #b48624;
+  fill: rgba(115, 245, 211, 0.08);
+  stroke: #73f5d3;
   stroke-dasharray: 5 4;
 }
 
 .mismatch {
-  fill: rgba(127, 107, 159, 0.13);
-  stroke: #7f6b9f;
+  fill: rgba(255, 187, 110, 0.08);
+  stroke: #ffbb6e;
 }
 
 .table {
@@ -129,13 +137,14 @@
 }
 
 .table > div {
-  background: var(--paper);
+  background: #101411;
   padding: 12px 14px;
 }
 
 .table dt {
   font-weight: 750;
   margin-bottom: 4px;
+  color:#e9eee9;
 }
 
 .table dd {
@@ -143,29 +152,19 @@
   display: grid;
   gap: 2px;
   color: var(--muted);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
 }
 
 .table dd strong {
-  color: var(--ink);
+  color: var(--acid);
 }
 
 @media (max-width: 760px) {
-  .card {
-    grid-template-columns: 1fr;
-  }
-
-  .visual {
-    min-height: 300px;
-  }
-
-  .table {
-    grid-template-columns: 1fr 1fr;
-  }
+  .card { grid-template-columns: 1fr; }
+  .visual { min-height: 300px; }
+  .table { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 480px) {
-  .table {
-    grid-template-columns: 1fr;
-  }
+  .table { grid-template-columns: 1fr; }
 }
