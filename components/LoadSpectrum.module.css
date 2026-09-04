@@ -1,0 +1,171 @@
+.card {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 24px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.copy h2 {
+  margin: 8px 0 10px;
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.copy p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 42rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 20px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend i {
+  width: 9px;
+  height: 9px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.contentDot { background: #246047; }
+.preferenceDot { background: #d4a53d; }
+.mismatchDot { background: #7f6b9f; }
+
+.insight {
+  margin-top: 22px;
+  padding: 15px 16px;
+  border-left: 3px solid var(--yellow);
+  background: #f2f0e7;
+  display: grid;
+  gap: 2px;
+}
+
+.insight span,
+.insight small {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.insight strong {
+  font-size: 1.15rem;
+}
+
+.visual {
+  min-height: 340px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at center, rgba(36, 96, 71, 0.07), transparent 58%),
+    linear-gradient(180deg, rgba(255,255,255,.72), rgba(242,245,239,.72));
+  border-radius: 10px;
+}
+
+.visual svg {
+  width: min(100%, 380px);
+  overflow: visible;
+}
+
+.grid {
+  fill: none;
+  stroke: #d7ddd5;
+  stroke-width: 1;
+}
+
+.axis {
+  stroke: #e0e4df;
+  stroke-width: 1;
+}
+
+.label {
+  font-size: 10px;
+  fill: #5e6c64;
+  font-weight: 650;
+}
+
+.shape {
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.content {
+  fill: rgba(36, 96, 71, 0.18);
+  stroke: #246047;
+}
+
+.preference {
+  fill: rgba(212, 165, 61, 0.12);
+  stroke: #b48624;
+  stroke-dasharray: 5 4;
+}
+
+.mismatch {
+  fill: rgba(127, 107, 159, 0.13);
+  stroke: #7f6b9f;
+}
+
+.table {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin: 0;
+}
+
+.table > div {
+  background: var(--paper);
+  padding: 12px 14px;
+}
+
+.table dt {
+  font-weight: 750;
+  margin-bottom: 4px;
+}
+
+.table dd {
+  margin: 0;
+  display: grid;
+  gap: 2px;
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.table dd strong {
+  color: var(--ink);
+}
+
+@media (max-width: 760px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+
+  .visual {
+    min-height: 300px;
+  }
+
+  .table {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .table {
+    grid-template-columns: 1fr;
+  }
+}
