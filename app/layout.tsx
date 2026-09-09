@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./experience.css";
+import "./demo-experience.css";
 
 export const metadata: Metadata = {
   title: "Cognitive Load Firewall",
