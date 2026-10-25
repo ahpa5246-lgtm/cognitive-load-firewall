@@ -1,5 +1,32 @@
 # Cognitive Load Firewall
 
+## Download, setup and project overview
+
+An interface-adaptation prototype driven by accessibility preferences.
+
+Load estimation; adaptation planning; fidelity checks; guest preferences; recovery-session interface.
+
+![Project workflow illustration](docs/project-overview.svg)
+
+[Download source ZIP](https://github.com/ahpa5246-lgtm/cognitive-load-firewall/archive/refs/heads/main.zip) · [Changes and branches](https://github.com/ahpa5246-lgtm/cognitive-load-firewall/branches) · [Verification notes](docs/QUALITY_REVIEW.md)
+
+The ZIP contains source code. Installation steps and external runtime requirements are listed below.
+
+```bash
+git clone https://github.com/ahpa5246-lgtm/cognitive-load-firewall.git
+cd cognitive-load-firewall
+```
+
+From the repository directory:
+
+```text
+npm install
+npm run dev
+```
+
+The diagram is a project illustration. Test results and runtime limitations are recorded in [the review](docs/QUALITY_REVIEW.md); it is not a production-readiness certification.
+
+
 **Your brain shouldn't have to fight the interface.**
 
 Cognitive Load Firewall is an adaptive cognitive-accessibility platform that reshapes digital content around user-provided tolerance and accessibility preferences. It is especially relevant to concussion-recovery workflows, but it is **not** a diagnostic tool and does not provide medical clearance.
